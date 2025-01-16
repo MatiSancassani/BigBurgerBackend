@@ -10,11 +10,18 @@ import ProductsRouter from "./routes/products.routes.js";
 const app = express();
 const httpServer = http.createServer(app);
 
+const corsOptions = {
+    origin: true, // Permite cualquier origen
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+};
+app.use(cors(corsOptions));
+
 const PORT = config.PORT || 8020;
 
 httpServer.listen(PORT, async () => {
     await mongoose.connect(config.MONGODB_URI);
-    app.use(cors({ origin: "*" }));
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
 
