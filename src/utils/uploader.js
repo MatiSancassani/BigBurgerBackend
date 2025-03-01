@@ -11,3 +11,18 @@ const storage = multer.diskStorage({
 });
 
 export const upload = multer({ storage });
+
+
+
+const storageAdditional = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, config.UPLOAD_DIR); // Usar la ruta desde config
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`); // Generar un nombre único
+    }
+});
+
+export const uploadAdditional = multer({ storageAdditional });
+
+

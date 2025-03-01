@@ -17,7 +17,7 @@ export const getProductById = async (req, res) => {
         }
         res.status(200).send({ success: true, data: product });
     } catch (err) {
-        console.log("getById ->", err);
+        console.log("getProductById ->", err);
         res.status(500).send({ success: false, data: null, error: error.message });
     }
 };
