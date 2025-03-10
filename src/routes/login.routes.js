@@ -2,7 +2,7 @@ import { Router } from "express";
 
 const router = Router();
 
-router.postt("/", (req, res) => {
+router.post("/", (req, res) => {
     res.send("Auth");
 });
 

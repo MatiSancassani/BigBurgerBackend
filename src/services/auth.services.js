@@ -1,15 +1,15 @@
 import userModel from "../dao/mongo/models/user.model.js";
 import bcrypt from "bcrypt";
 
-export const registerUserService = async ({ name, email, password }) => {
+export const registerUserService = async ({ userName, email, password }) => {
 
-    if (!name || !email || !password) {
+    if (!userName || !email || !password) {
         throw new Error("Faltan datos");
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
     const user = await userModel.create({
-        name,
+        userName,
         email,
         password: hashPassword
     });
@@ -19,11 +19,11 @@ export const registerUserService = async ({ name, email, password }) => {
 export const loginUserService = async ({ email, password }) => {
     const user = await userModel.findOne({ email });
     if (!user) {
-        throw new Error("El usuario no existe");
+        return { success: false, message: "El usuario no existe" };
     }
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
-        throw new Error("Contraseña incorrecta");
+        return { success: false, message: "Contraseña incorrecta" }; // Devolver un objeto en caso de error
     }
 
     // const { password: _, ...userWithoutPassword } = user.toObject();
@@ -40,3 +40,4 @@ export const loginUserService = async ({ email, password }) => {
 
 export const getEmailService = async (email) => await userModel.findOne({ email });
 
+export const getUserByIdService = async (id) => await userModel.findById(id)
