@@ -15,12 +15,12 @@ const app = express();
 const httpServer = http.createServer(app);
 
 const corsOptions = {
-    origin: 'https://bigburgerbackend.onrender.com', // Permite cualquier origen
+    origin: true, // Permite cualquier origen
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 };
-app.options('*', cors(corsOptions));
+app.use(cors(corsOptions));
 
 const PORT = config.PORT || 8020;
 
