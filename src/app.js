@@ -15,12 +15,12 @@ const app = express();
 const httpServer = http.createServer(app);
 
 const corsOptions = {
-    origin: true, // Permite cualquier origen
+    origin: 'https://big-burger-omega.vercel.app', // Permite cualquier origen
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 };
-app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 const PORT = config.PORT || 8020;
 
