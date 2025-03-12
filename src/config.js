@@ -11,7 +11,7 @@ const config = {
     JWT_SECRET_KEY: process.env.JWT_SECRET_KEY,
 
     get UPLOAD_DIR() { return path.join(this.DIRNAME, 'public', 'uploads'); },
-    get UPLOAD_DIR() { return path.join(this.DIRNAME, 'public', 'additionals'); },
+    get UPLOAD_ADDITIONALS_DIR() { return path.join(this.DIRNAME, 'public', 'additionals'); },
     MONGODB_URI: ('mongodb+srv://matisancassani:sanca123@cluster0.lcblgku.mongodb.net/BigBurgerDB'),
 
 }

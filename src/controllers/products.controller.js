@@ -23,6 +23,8 @@ export const getProductById = async (req, res) => {
 };
 export const addProduct = async (req, res) => {
     try {
+        console.log("FILE:", req.file);
+        console.log(req.body)
         const { title, description, price, stock, category, code, status } = req.body;
         const thumbnail = req.file ? `/public/uploads/${req.file.filename}` : null;
 
