@@ -1,22 +1,44 @@
-import { registerUserService, getEmailService, loginUserService, getUserByIdService } from "../services/auth.services.js";
+import { registerUserService, getUserByEmailService, getUserByIdService } from "../services/auth.services.js";
 import jwt from "jsonwebtoken";
 import { generateToken } from "../utils/jsonWebToken.js";
-// import bcrypt from "bcrypt";
+import bcrypt from "bcrypt";
 export const createUser = async (req, res) => {
     try {
         const { userName, email, password } = req.body;
 
-        const existEmail = await getEmailService(email);
+        if (!userName || !email || !password) {
+            throw new Error("Los campos son obligatorios");
+        }
+
+        if (typeof password !== "string") {
+            return res.status(400).send({
+                status: "error",
+                error: "La contraseña debe ser un texto válido."
+            });
+        }
+        if (password.length < 8 || password.length > 12 ||
+            !/[A-Z]/.test(password) ||  // Al menos una mayúscula
+            !/[a-z]/.test(password) ||  // Al menos una minúscula
+            !/[0-9]/.test(password)) {  // Al menos un número
+            return res.status(400).send({
+                status: "error",
+                error: "La contraseña debe tener entre 8 y 12 caracteres, al menos una mayúscula, una minúscula y un número."
+            });
+        }
+        req.body.password = await bcrypt.hash(password, 10);
+
+        const existEmail = await getUserByEmailService(email);
         if (existEmail) return res.status(400).send({ status: "error", error: "User already exists" });
 
         const user = await registerUserService(req.body);
 
-        const { _id, rol } = user;
-        const jwt = generateToken({ userName, email, rol });
-
-        res.status(200).send({ success: true, data: { _id, userName, email, rol }, jwt });
+        res.status(200).send({ success: true, data: user });
     } catch (error) {
-        res.status(500).send({ success: false, data: null, error: error.message });
+        res.status(500).send({
+            success: false,
+            message: "Error en el servidor. Por favor, inténtelo de nuevo más tarde.",
+            error: error.message,
+        });
     }
 }
 
@@ -24,20 +46,36 @@ export const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        const user = await loginUserService({ email, password });
+        const user = await getUserByEmailService(email);
+        if (!user) return res.status(400).json({
+            success: false,
+            message: "Email incorrecto",
+        })
 
-        if (!user) {
-            return res.status(404).send({ success: false, message: "El email no existe" });
+        const isValidPassword = await bcrypt.compare(password, user.password);
+        if (!isValidPassword) {
+            return res.status(400).json({
+                success: false,
+                message: "Password incorrecta",
+            });
         }
 
-        if (user.success === false) {
-            return res.status(401).send({ success: false, message: user.message });
-        }
+        const { _id, userName, rol } = user;
+        const token = generateToken({ _id, userName, email, rol });
 
-        res.status(200).send({ success: true, data: user });
+        res.status(200).json({
+            success: true,
+            message: "Inicio de sesión exitoso",
+            data: { _id, userName, email, rol }
+        });
+
     } catch (error) {
         console.error("Error en login:", error);
-        res.status(500).send({ success: false, message: "Error en el servidor" });
+        res.status(500).json({
+            success: false,
+            message: "Error en el servidor. Por favor, inténtelo de nuevo más tarde.",
+            error: err.message,
+        });
     }
 }
 

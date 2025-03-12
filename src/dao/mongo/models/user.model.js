@@ -8,7 +8,7 @@ const usersSchema = new mongoose.Schema({
     userName: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
-    rol: { type: String, default: "user", enum: ['user', 'admin'] },
+    rol: { type: Boolean, default: "false" },
     dateOfCreation: { type: Date, default: Date.now() },
 }, { versionKey: false });
 

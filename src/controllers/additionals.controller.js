@@ -25,10 +25,12 @@ export const getAdditionalById = async (req, res) => {
 };
 
 export const addAdditional = async (req, res) => {
+    console.log("FILE:", req.file); // Verifica si `req.file` tiene datos
     try {
-        const { title, price, thumbnail, category } = req.body;
-        // const thumbnail = req.file ? `/public/additionals/${req.file.filename}` : null;
+        const { title, price, category } = req.body;
+        const thumbnail = req.file ? `/public/additionals/${req.file.filename}` : null;
 
+        console.log(thumbnail)
         if (!title || !price || !thumbnail || !category) {
             return res.status(400).json({ error: 'Todos los campos son obligatorios' });
         }

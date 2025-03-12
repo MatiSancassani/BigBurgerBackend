@@ -16,7 +16,7 @@ export const upload = multer({ storage });
 
 const storageAdditional = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, config.UPLOAD_DIR); // Usar la ruta desde config
+        cb(null, config.UPLOAD_ADDITIONALS_DIR); // Usar la ruta desde config
     },
     filename: (req, file, cb) => {
         cb(null, `${Date.now()}-${file.originalname}`); // Generar un nombre único
@@ -24,5 +24,6 @@ const storageAdditional = multer.diskStorage({
 });
 
 export const uploadAdditional = multer({ storageAdditional });
+
 
 

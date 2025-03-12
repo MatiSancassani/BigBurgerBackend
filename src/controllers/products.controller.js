@@ -16,8 +16,8 @@ export const getProductById = async (req, res) => {
             res.status(404).send({ msg: "El producto no existe" });
         }
         res.status(200).send({ success: true, data: product });
-    } catch (err) {
-        console.log("getProductById ->", err);
+    } catch (error) {
+        console.log("getProductById ->", error);
         res.status(500).send({ success: false, data: null, error: error.message });
     }
 };
