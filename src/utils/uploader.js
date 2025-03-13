@@ -1,29 +1,32 @@
-import multer from 'multer'
+import multer from 'multer';
 import config from '../config.js';
 
-const storage = multer.diskStorage({
+// Configuración para productos
+const addProductFile = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, config.UPLOAD_DIR); // Usar la ruta desde config
+        cb(null, config.UPLOAD_DIR);
     },
     filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`); // Generar un nombre único
+        cb(null, `${Date.now()}-${file.originalname}`);
     }
 });
 
-export const upload = multer({ storage });
+export const uploadProductos = multer({
+    storage: addProductFile,
+    limits: { fileSize: 20 * 1024 * 1024 }
+});
 
-
-
-const storageAdditional = multer.diskStorage({
+// Configuración para adicionales
+const addAdditionalFile = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, config.UPLOAD_ADDITIONALS_DIR); // Usar la ruta desde config
+        cb(null, config.UPLOAD_DIR_ADDITIONALS); // Puedes usar una carpeta diferente para adicionales
     },
     filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`); // Generar un nombre único
+        cb(null, `${Date.now()}-${file.originalname}`);
     }
 });
 
-export const uploadAdditional = multer({ storageAdditional });
+export const uploadAdicionales = multer({ storage: addAdditionalFile });
 
 
 

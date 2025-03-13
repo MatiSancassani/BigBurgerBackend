@@ -25,7 +25,12 @@ export const getAdditionalById = async (req, res) => {
 };
 
 export const addAdditional = async (req, res) => {
-    console.log("FILE:", req.file); // Verifica si `req.file` tiene datos
+    // console.log("FILE:", req.file); // Verifica si `req.file` tiene datos
+    // if (req.file) {
+    //     console.log("FILE.FILENAME:", req.file.filename);
+    //     console.log("FILE.PATH", req.file.path)
+    //     console.log("FILE.ORIGINALNAME:", req.file.originalname)
+    // }
     try {
         const { title, price, category } = req.body;
         const thumbnail = req.file ? `/public/additionals/${req.file.filename}` : null;
