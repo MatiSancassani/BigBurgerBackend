@@ -1,4 +1,5 @@
 import { getAllProductsService, addProductService, getProductByIdService } from "../services/products.services.js";
+import config from "../config.js";
 export const getProduct = async (req, res) => {
     try {
         const products = await getAllProductsService();
