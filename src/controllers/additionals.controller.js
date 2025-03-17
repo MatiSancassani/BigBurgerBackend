@@ -27,7 +27,7 @@ export const getAdditionalById = async (req, res) => {
 export const addAdditional = async (req, res) => {
     try {
         const { title, price, category } = req.body;
-        const thumbnail = req.file ? `https://bigburgerbackend-1.onrender.com/public/additionals/${req.file.filename}` : null;
+        const thumbnail = req.file ? `/public/additionals/${req.file.filename}` : null;
 
         console.log(thumbnail)
         if (!title || !price || !thumbnail || !category) {
