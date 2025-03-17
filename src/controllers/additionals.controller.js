@@ -1,4 +1,5 @@
 import { getAllAdditionalsService, getAdditionalByIdService, addAdditionalService } from "../services/additionals.services.js";
+import config from "../config.js";
 
 export const getAdditional = async (req, res) => {
     try {
@@ -27,7 +28,7 @@ export const getAdditionalById = async (req, res) => {
 export const addAdditional = async (req, res) => {
     try {
         const { title, price, category } = req.body;
-        const thumbnail = req.file ? `/public/additionals/${req.file.filename}` : null;
+        const thumbnail = req.file ? `${config.SERVER_UPLOAD_PATH}/additionals/${req.file.filename}` : null;
 
         console.log(thumbnail)
         if (!title || !price || !thumbnail || !category) {
