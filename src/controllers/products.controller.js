@@ -24,7 +24,7 @@ export const getProductById = async (req, res) => {
 export const addProduct = async (req, res) => {
     try {
         const { title, description, price, stock, category, code, status } = req.body;
-        const thumbnail = req.file ? `/public/uploads/${req.file.filename}` : null;
+        const thumbnail = req.file ? `${config.SERVER_UPLOAD_PATH}/products/${req.file.filename}` : null;
 
         if (!title || !description || !price || !stock || !category || !thumbnail) {
             return res.status(400).json({ error: 'Todos los campos son obligatorios' });

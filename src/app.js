@@ -31,7 +31,7 @@ httpServer.listen(PORT, async () => {
     app.use(express.urlencoded({ limit: '20mb', extended: true }));
     app.use(cookieParser());
 
-    app.use('/public', express.static(path.join(config.DIRNAME, 'public')));
+    app.use("/static", express.static(`${config.DIRNAME}/public`));
 
 
     app.use("/api/carts", cartsRoutes);
