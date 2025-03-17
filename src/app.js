@@ -9,6 +9,7 @@ import config from "./config.js";
 import AdditionalRouter from './routes/additionals.routes.js'
 import ProductsRouter from "./routes/products.routes.js";
 import AuthRouter from "./routes/auth.routes.js";
+import cartsRoutes from './routes/carts.routes.js'
 
 const app = express();
 
@@ -32,6 +33,8 @@ httpServer.listen(PORT, async () => {
 
     app.use('/public', express.static(path.join(config.DIRNAME, 'public')));
 
+
+    app.use("/api/carts", cartsRoutes);
     app.use("/api/products", ProductsRouter);
     app.use("/api/additionals", AdditionalRouter);
     app.use('/api', AuthRouter);

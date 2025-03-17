@@ -2,6 +2,7 @@ import { registerUserService, getUserByEmailService, getUserByIdService } from "
 import jwt from "jsonwebtoken";
 import { generateToken } from "../utils/jsonWebToken.js";
 import bcrypt from "bcrypt";
+import { createCartService } from "../services/carts.services.js";
 export const createUser = async (req, res) => {
     try {
         const { userName, email, password } = req.body;
@@ -29,6 +30,9 @@ export const createUser = async (req, res) => {
 
         const existEmail = await getUserByEmailService(email);
         if (existEmail) return res.status(400).send({ status: "error", error: "User already exists" });
+
+        const cart = await createCartService();
+        req.body.cart_id = cart._id;
 
         const user = await registerUserService(req.body);
 
