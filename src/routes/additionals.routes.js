@@ -6,7 +6,7 @@ const router = Router();
 
 router.get("/", getAdditional)
 router.get("/:pid", getAdditionalById)
-router.post("/", uploader('additionals').single('additionalsImages'), addAdditional);
+router.post("/", uploader('additionals').single('thumbnail'), addAdditional);
 
 
 export default router;

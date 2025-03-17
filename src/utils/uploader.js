@@ -24,7 +24,7 @@ const getDynamicStorage = (subFolder) => {
 // Función para crear un uploader dinámico basado en la subcarpeta
 export const uploader = (subFolder) => {
     const storage = getDynamicStorage(subFolder);
-    return multer({ storage }); // Asegurarse de retornar la instancia multer
+    return multer({ storage, limits: { fileSize: 10000000 } }); // Asegurarse de retornar la instancia multer
 };
 
 

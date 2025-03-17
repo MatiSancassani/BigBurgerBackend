@@ -6,6 +6,6 @@ const router = Router();
 
 router.get("/", getProduct);
 router.get("/:pid", getProductById);
-router.post("/", uploader('products').single('productsImages'), addProduct);
+router.post("/", uploader('products').single('thumbnail'), addProduct);
 
 export default router;
