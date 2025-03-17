@@ -7,9 +7,9 @@ const config = {
     PORT: process.env.PORT || 8080,
     SERVER: 'Servidor 2025',
     DIRNAME: path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:\/)/, '$1')),
-    get UPLOAD_DIR() { return path.join(this.DIRNAME, 'public', 'uploads'); },
+    get UPLOAD_DIR() { return path.join(this.DIRNAME, 'uploads'); },
     // get UPLOAD_DIR_ADDITIONALS() { return path.join(this.DIRNAME, 'public', 'additionals'); },
-    SERVER_UPLOAD_PATH: 'https://bigburgerbackend-1.onrender.com/static/uploads',
+    SERVER_UPLOAD_PATH: 'https://bigburgerbackend-1.onrender.com/uploads',
 
     SECRET: 'cod3r',
     JWT_SECRET_KEY: process.env.JWT_SECRET_KEY,

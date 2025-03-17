@@ -32,7 +32,7 @@ httpServer.listen(PORT, async () => {
     app.use(cookieParser());
 
     app.use("/static", express.static(`${config.DIRNAME}/public`));
-
+    app.use("/uploads", express.static(`${config.DIRNAME}/uploads`));
 
     app.use("/api/carts", cartsRoutes);
     app.use("/api/products", ProductsRouter);
