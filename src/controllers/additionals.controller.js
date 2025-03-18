@@ -28,11 +28,14 @@ export const getAdditionalById = async (req, res) => {
 export const addAdditional = async (req, res) => {
     try {
         const { title, price, category } = req.body;
-        const thumbnail = req.file ? `${config.SERVER_UPLOAD_PATH}/additionals/${req.file.filename}` : null;
-
-        console.log(thumbnail)
-        if (!title || !price || !thumbnail || !category) {
-            return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+        if (!title || !description || !price || !stock || !category) {
+            return res.status(400).json({ error: "Todos los campos son obligatorios" });
+        }
+        let thumbnail = null;
+        if (req.file) {
+            thumbnail = await uploadToGCS(req.file);
+        } else {
+            return res.status(400).json({ error: "La imagen es obligatoria" });
         }
 
         const additionalBody = {

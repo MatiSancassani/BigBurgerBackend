@@ -66,7 +66,7 @@ const uploadToGCS = async (file) => {
         blobStream.on('error', (err) => reject(err));
 
         blobStream.on('finish', () => {
-            const publicUrl = `https://storage.googleapis.com/${bucket}/${blob.name}`;
+            const publicUrl = `https://storage.googleapis.com/${process.env.GCS_BUCKET_NAME}/${blob.name}`;
             resolve(publicUrl);
         });
 
