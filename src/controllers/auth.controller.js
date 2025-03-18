@@ -65,7 +65,7 @@ export const loginUser = async (req, res) => {
         }
 
         const { _id, userName, rol } = user;
-        const token = generateToken({ _id, userName, email, rol });
+        // const token = generateToken({ _id, userName, email, rol });
 
         res.status(200).json({
             success: true,

@@ -7,10 +7,6 @@ const collection = "cart";
 
 const cartsSchema = new mongoose.Schema(
     {
-        _id: {
-            type: String,
-            default: uuidv4,
-        },
         products: [
             {
                 _id: false,

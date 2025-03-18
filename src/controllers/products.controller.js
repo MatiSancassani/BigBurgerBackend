@@ -1,5 +1,6 @@
 import { getAllProductsService, addProductService, getProductByIdService } from "../services/products.services.js";
-import config from "../config.js";
+// import config from "../config.js";
+import { uploadToGCS } from "../utils/uploader.js";
 export const getProduct = async (req, res) => {
     try {
         const products = await getAllProductsService();
@@ -25,10 +26,14 @@ export const getProductById = async (req, res) => {
 export const addProduct = async (req, res) => {
     try {
         const { title, description, price, stock, category, code, status } = req.body;
-        const thumbnail = req.file ? `${config.SERVER_UPLOAD_PATH}/products/${req.file.filename}` : null;
-
-        if (!title || !description || !price || !stock || !category || !thumbnail) {
-            return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+        if (!title || !description || !price || !stock || !category) {
+            return res.status(400).json({ error: "Todos los campos son obligatorios" });
+        }
+        let thumbnail = null;
+        if (req.file) {
+            thumbnail = await uploadToGCS(req.file);
+        } else {
+            return res.status(400).json({ error: "La imagen es obligatoria" });
         }
 
         const productBody = {

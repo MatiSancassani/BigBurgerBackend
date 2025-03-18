@@ -2,6 +2,7 @@ import path from 'path'
 import multer from 'multer'
 import fs from 'fs';
 import config from '../config.js';
+import { Storage } from '@google-cloud/storage';
 
 const getDynamicStorage = (subFolder) => {
     const uploadPath = path.join(config.UPLOAD_DIR, subFolder);
@@ -28,33 +29,42 @@ export const uploader = (subFolder) => {
 };
 
 
-
-// Configuración para productos
-const addProductFile = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, config.UPLOAD_DIR);
-    },
-    filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`);
-    }
+const storage = new Storage({
+    keyFilename: path.join(config.DIRNAME, './config/keys.json'),
 });
 
-export const uploadProductos = multer({
-    storage: addProductFile,
-    limits: { fileSize: 20 * 1024 * 1024 }
-});
+const bucketName = 'bucket_img_backend';
+export const bucket = storage.bucket(bucketName);
 
-// Configuración para adicionales
-const addAdditionalFile = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, config.UPLOAD_DIR_ADDITIONALS); // Puedes usar una carpeta diferente para adicionales
-    },
-    filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`);
-    }
-});
+const uploaderCloud = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 10000000 }
+})
 
-export const uploadAdicionales = multer({ storage: addAdditionalFile });
+const uploadToGCS = async (file) => {
+    return new Promise((resolve, reject) => {
+        if (!file) return reject('No hay archivos');
 
+        const blob = bucket.file(`products/${Date.now()}_${file.originalname}`);
+        const blobStream = blob.createWriteStream({
+            resumable: false,
+            public: true,
+            metadata: {
+                contentType: file.mimetype
+            }
+        });
+
+        blobStream.on('error', (err) => reject(err));
+
+        blobStream.on('finish', () => {
+            const publicUrl = `https://storage.googleapis.com/${bucketName}/${blob.name}`;
+            resolve(publicUrl);
+        });
+
+        blobStream.end(file.buffer);
+    })
+}
+
+export { uploadToGCS, uploaderCloud }
 
 

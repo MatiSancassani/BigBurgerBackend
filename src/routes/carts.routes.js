@@ -3,7 +3,10 @@ import {
     getCartById,
     addCart,
     getCartIdService,
-    addProductInCart
+    addProductInCart,
+    updateProductInCart,
+    deleteProductInCart,
+    deleteAllProducts
 } from "../controllers/carts.controller.js";
 
 
@@ -13,8 +16,8 @@ router.get("/", getCartIdService);
 router.get("/:cid", getCartById);
 router.post("/", addCart);
 router.post("/:cid/product/:pid", addProductInCart);
-// router.put("/:cid/products/:pid", updateProductInCart);
-// router.delete("/:cid/products/:pid", deleteProductInCart);
-// router.delete("/:cid", deleteAllProducts);
+router.put("/:cid/product/:pid", updateProductInCart);
+router.delete("/:cid/product/:pid", deleteProductInCart);
+router.delete("/:cid", deleteAllProducts);
 
 export default router;

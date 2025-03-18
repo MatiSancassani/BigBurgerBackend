@@ -2,10 +2,12 @@ import { v4 as uuidv4 } from "uuid";
 import {
     getCartByIdService,
     createCartService,
-    addProductInCartService
+    addProductInCartService,
+    updateProductInCartService,
+    deleteAllProductsService,
+    deleteProductInCartService
 } from "../services/carts.services.js";
 import { getProductByIdService } from "../services/products.services.js";
-import { getUserByIdService } from "../services/auth.services.js";
 
 export const getCartIdService = async (req, res) => {
     try {
@@ -43,15 +45,15 @@ export const addCart = async (req, res) => {
 
 export const addProductInCart = async (req, res) => {
     try {
-        const { id } = req.user;
+        // const { _id } = req.data;
         const { cid, pid } = req.params;
 
-        const user = await getUserByIdService(id);
         const product = await getProductByIdService(pid);
 
         if (!product) return res.status(400).send({ msg: "Product no existe" });
 
-        const cartUser = user.cart_id._id.toString();
+        // const user = await getUserByIdService(id);
+        // const cartUser = user.cart_id._id.toString();
 
         // if (!(cartUser === cid)) return res.status(400).send({ msg: 'No puedes agregar productos a un carrito que no te pertenece' });
 
@@ -71,6 +73,60 @@ export const addProductInCart = async (req, res) => {
         res.status(200).send({ payload: cart });
     } catch (err) {
         console.log("addProductInCart ->", err);
+        res.status(500).send({ payload: null, error: err.message });
+    }
+};
+
+
+export const updateProductInCart = async (req, res) => {
+    try {
+        const { cid, pid } = req.params;
+        const { quantity } = req.body;
+
+        const product = await getProductByIdService(pid);
+        // if(!(user.cart_id.toString() === cid)) return res.status(400).send( {msg: 'Cart no valido'});
+        if (!product) return res.status(400).send({ msg: "Product no existe" });
+
+        if (!quantity || !Number.isInteger(quantity)) {
+            console.log("Debe ser un numero entero");
+        }
+        // const cart = await updateProductInCartService(cid, pid, quantity);
+        const cart = await updateProductInCartService(cid, pid, quantity);
+        res.status(200).send({ payload: { cart } });
+    } catch (err) {
+        console.log("updateProductInCart ->", err);
+        res.status(500).send({ payload: null, error: err.message });
+    }
+};
+
+export const deleteProductInCart = async (req, res) => {
+    try {
+        const { cid, pid } = req.params;
+
+        const product = await getProductByIdService(pid);
+        // if(!(user.cart_id.toString() === cid)) return res.status(400).send( {msg: 'Cart no valido'});
+        if (!product) return res.status(400).send({ msg: "Product no existe" });
+
+        // const cart = await deleteProductInCartService(cid,pid);
+        const cart = await deleteProductInCartService(cid, pid);
+
+        res.status(200).send({ payload: { cart } });
+    } catch (err) {
+        console.log("deleteProductInCart ->", err);
+        res.status(500).send({ payload: null, error: err.message });
+    }
+};
+
+export const deleteAllProducts = async (req, res) => {
+    try {
+        const { cid } = req.params;
+        // const cart = await deleteAllProductsService(cid);
+        const cart = await deleteAllProductsService(cid);
+
+        // const cart = await cartModel.findByIdAndDelete(cid); // Eliminariamos todo el carrito
+        res.status(200).send({ payload: { cart } });
+    } catch (err) {
+        console.log("deleteAllProducts ->", err);
         res.status(500).send({ payload: null, error: err.message });
     }
 };

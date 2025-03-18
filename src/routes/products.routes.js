@@ -1,11 +1,11 @@
 import { Router } from "express";
 import { getProduct, addProduct, getProductById } from "../controllers/products.controller.js";
-import { uploader } from "../utils/uploader.js";
+import { uploaderCloud } from "../utils/uploader.js";
 
 const router = Router();
 
 router.get("/", getProduct);
 router.get("/:pid", getProductById);
-router.post("/", uploader('products').single('thumbnail'), addProduct);
+router.post("/", uploaderCloud.single('thumbnail'), addProduct);
 
 export default router;

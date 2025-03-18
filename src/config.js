@@ -9,7 +9,7 @@ const config = {
     DIRNAME: path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:\/)/, '$1')),
 
     get UPLOAD_DIR() { return path.join(this.DIRNAME, '../uploads'); },
-    SERVER_UPLOAD_PATH: 'https://bigburgerbackend-1.onrender.com/public',
+    SERVER_UPLOAD_PATH: 'http://localhost:8030/public',
 
     SECRET: 'cod3r',
     JWT_SECRET_KEY: process.env.JWT_SECRET_KEY,

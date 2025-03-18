@@ -19,3 +19,17 @@ export const addProductInCartService = async (cid, pid) => {
 
     return cart;
 };
+
+export const updateProductInCartService = async (cid, pid, quantity) =>
+    await cartModel.findOneAndUpdate(
+        { _id: cid, "products.id": pid },
+        { $set: { "products.$.quantity": quantity } },
+        { new: true }
+    );
+
+export const deleteProductInCartService = async (cid, pid) =>
+    await cartModel.findByIdAndUpdate(cid, { $pull: { products: { id: pid } } }, { new: true });
+
+export const deleteAllProductsService = async (cid) =>
+    await cartModel.findByIdAndUpdate(cid, { $set: { products: [] } }, { new: true });
+//  await cartModel.findByIdAndDelete(cid); // Eliminariamos todo el carrito
