@@ -50,11 +50,11 @@ const uploaderCloud = multer({
     limits: { fileSize: 10000000 }
 })
 
-const uploadToGCS = async (file) => {
+const uploadToGCS = async (file, folder = "products") => {
     return new Promise((resolve, reject) => {
         if (!file) return reject('No hay archivos');
 
-        const blob = bucket.file(`products/${Date.now()}_${file.originalname}`);
+        const blob = bucket.file(`${folder}/${Date.now()}_${file.originalname}`);
         const blobStream = blob.createWriteStream({
             resumable: false,
             public: true,

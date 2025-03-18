@@ -1,5 +1,5 @@
 import { getAllAdditionalsService, getAdditionalByIdService, addAdditionalService } from "../services/additionals.services.js";
-import config from "../config.js";
+import { uploadToGCS } from "../utils/uploader.js";
 
 export const getAdditional = async (req, res) => {
     try {
@@ -33,7 +33,7 @@ export const addAdditional = async (req, res) => {
         }
         let thumbnail = null;
         if (req.file) {
-            thumbnail = await uploadToGCS(req.file);
+            thumbnail = await uploadToGCS(req.file, "additionals");
         } else {
             return res.status(400).json({ error: "La imagen es obligatoria" });
         }

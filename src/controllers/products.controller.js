@@ -31,7 +31,7 @@ export const addProduct = async (req, res) => {
         }
         let thumbnail = null;
         if (req.file) {
-            thumbnail = await uploadToGCS(req.file);
+            thumbnail = await uploadToGCS(req.file, "products");
         } else {
             return res.status(400).json({ error: "La imagen es obligatoria" });
         }
