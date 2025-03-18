@@ -4,6 +4,10 @@ import fs from 'fs';
 import config from '../config.js';
 import { Storage } from '@google-cloud/storage';
 
+import dotenv from "dotenv";
+dotenv.config();
+
+
 const getDynamicStorage = (subFolder) => {
     const uploadPath = path.join(config.UPLOAD_DIR, subFolder);
 
@@ -30,11 +34,16 @@ export const uploader = (subFolder) => {
 
 
 const storage = new Storage({
-    keyFilename: path.join(config.DIRNAME, './config/keys.json'),
+    credentials: {
+        type: process.env.GCS_TYPE,
+        project_id: process.env.GCS_PROJECT_ID,
+        private_key_id: process.env.GCS_PRIVATE_KEY_ID,
+        private_key: process.env.GCS_PRIVATE_KEY, // 🔥 Corrige los saltos de línea en la clave
+        client_email: process.env.GCS_CLIENT_EMAIL,
+    },
 });
 
-const bucketName = 'bucket_img_backend';
-export const bucket = storage.bucket(bucketName);
+export const bucket = storage.bucket(process.env.GCS_BUCKET_NAME);
 
 const uploaderCloud = multer({
     storage: multer.memoryStorage(),
@@ -57,7 +66,7 @@ const uploadToGCS = async (file) => {
         blobStream.on('error', (err) => reject(err));
 
         blobStream.on('finish', () => {
-            const publicUrl = `https://storage.googleapis.com/${bucketName}/${blob.name}`;
+            const publicUrl = `https://storage.googleapis.com/${bucket}/${blob.name}`;
             resolve(publicUrl);
         });
 
