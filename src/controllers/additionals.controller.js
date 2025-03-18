@@ -28,7 +28,7 @@ export const getAdditionalById = async (req, res) => {
 export const addAdditional = async (req, res) => {
     try {
         const { title, price, category } = req.body;
-        if (!title || !description || !price || !stock || !category) {
+        if (!title || !price || !category) {
             return res.status(400).json({ error: "Todos los campos son obligatorios" });
         }
         let thumbnail = null;
