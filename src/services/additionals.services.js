@@ -7,7 +7,6 @@ export const getAdditionalByIdService = async (pid) => await additionalModel.fin
 
 export const addAdditionalService = async ({ title, price, thumbnail, category }) => {
     const newAdditional = await additionalModel.create({
-        _id: uuidv4(),
         title,
         price,
         thumbnail,

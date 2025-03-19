@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from "uuid";
+import mongoose from "mongoose";
 import {
     getCartByIdService,
     createCartService,
@@ -8,6 +8,7 @@ import {
     deleteProductInCartService
 } from "../services/carts.services.js";
 import { getProductByIdService } from "../services/products.services.js";
+import additionalModel from "../dao/mongo/models/additional.model.js";
 
 export const getCartIdService = async (req, res) => {
     try {
@@ -45,31 +46,18 @@ export const addCart = async (req, res) => {
 
 export const addProductInCart = async (req, res) => {
     try {
-        // const { _id } = req.data;
         const { cid, pid } = req.params;
+        const { additionals } = req.body;
 
         const product = await getProductByIdService(pid);
-
         if (!product) return res.status(400).send({ msg: "Product no existe" });
 
-        // const user = await getUserByIdService(id);
-        // const cartUser = user.cart_id._id.toString();
-
-        // if (!(cartUser === cid)) return res.status(400).send({ msg: 'No puedes agregar productos a un carrito que no te pertenece' });
-
-        // if (user.rol === 'user') {
-        //     return res.status(400).send({ msg: 'Requieres rol Premium para agregar productos al carrito' });
-        // }
-
-        // if (user.rol === 'premium' && product.owner === user.email) {
-        //     return res.status(400).send({ msg: 'No puedes agregar tu propio producto al carrito' });
-        // }
-
-        const cart = await addProductInCartService(cid, pid);
-
+        const cart = await addProductInCartService(cid, pid, additionals || []);
         if (!cart) {
             console.log('El carrito no existe')
         }
+
+
         res.status(200).send({ payload: cart });
     } catch (err) {
         console.log("addProductInCart ->", err);

@@ -1,6 +1,4 @@
 import { registerUserService, getUserByEmailService, getUserByIdService } from "../services/auth.services.js";
-import jwt from "jsonwebtoken";
-import { generateToken } from "../utils/jsonWebToken.js";
 import bcrypt from "bcrypt";
 import { createCartService } from "../services/carts.services.js";
 export const createUser = async (req, res) => {
