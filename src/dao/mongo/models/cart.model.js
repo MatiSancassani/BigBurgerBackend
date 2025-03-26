@@ -18,19 +18,20 @@ const cartsSchema = new mongoose.Schema(
                     type: Number,
                     required: [true, "La cantidad del producto es obligatoria"],
                 },
-            },
-        ],
-        additionals: [
-            {
-                _id: false,
-                id: {
-                    type: String, // El _id en additionalModel es String
-                    ref: "additional",
-                },
-                quantity: {
-                    type: Number,
-                    required: [true, "La cantidad del adicional es obligatoria"],
-                },
+
+                additionals: [
+                    {
+                        _id: false,
+                        id: {
+                            type: String, // El _id en additionalModel es String
+                            ref: "additional",
+                        },
+                        quantity: {
+                            type: Number,
+                            required: [true, "La cantidad del adicional es obligatoria"],
+                        },
+                    },
+                ],
             },
         ],
     },

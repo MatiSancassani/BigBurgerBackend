@@ -26,7 +26,7 @@ export const getCartById = async (req, res) => {
         // const cart = await getCartByIdService(cid); //Traemos todas las propiedades dentro del cart
         const cart = await getCartByIdService(cid);
 
-        res.status(200).send({ payload: { cart } });
+        res.status(200).send({ data: cart });
     } catch (error) {
         console.log("getCartById ->", error);
         res.status(500).send({ payload: null, error: error.message });

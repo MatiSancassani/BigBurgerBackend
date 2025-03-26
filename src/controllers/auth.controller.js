@@ -62,13 +62,18 @@ export const loginUser = async (req, res) => {
             });
         }
 
-        const { _id, userName, rol } = user;
-        // const token = generateToken({ _id, userName, email, rol });
+
 
         res.status(200).json({
             success: true,
             message: "Inicio de sesión exitoso",
-            data: { _id, userName, email, rol }
+            data: {
+                _id: user._id,
+                userName: user.userName,
+                email: user.email,
+                rol: user.rol,
+                cart_id: user.cart_id || null, // Evita errores si `cart_id` es undefined
+            }
         });
 
     } catch (error) {
@@ -85,7 +90,11 @@ export const getUser = async (req, res) => {
     try {
         const { id } = req.params
         const user = await getUserByIdService(id)
-        res.status(200).send({ success: true, data: user });
+
+        const userWithoutPassword = user.toObject();
+        delete userWithoutPassword.password;
+
+        res.status(200).send({ success: true, data: userWithoutPassword });
     } catch (error) {
         res.status(500).send({ success: false, data: null, error: error.message });
     }
