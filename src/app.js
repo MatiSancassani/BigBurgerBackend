@@ -10,6 +10,7 @@ import AdditionalRouter from './routes/additionals.routes.js'
 import ProductsRouter from "./routes/products.routes.js";
 import AuthRouter from "./routes/auth.routes.js";
 import cartsRoutes from './routes/carts.routes.js'
+import passport from './config/passport.strategies.js'
 
 const app = express();
 
@@ -36,6 +37,7 @@ httpServer.listen(PORT, async () => {
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
     app.use(cookieParser());
+    app.use(passport.initialize());
 
     // app.use("/static", express.static(`${config.DIRNAME}/public`));
     app.use("/public", express.static(`${config.UPLOAD_DIR}`));
