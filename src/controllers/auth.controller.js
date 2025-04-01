@@ -27,7 +27,7 @@ export const createUser = async (req, res) => {
         req.body.password = await bcrypt.hash(password, 10);
 
         const existEmail = await getUserByEmailService(email);
-        if (existEmail) return res.status(400).send({ status: "error", error: "User already exists" });
+        if (existEmail) return res.status(400).send({ status: "error", error: "El email ingresado ya existe" });
 
         const cart = await createCartService();
         req.body.cart_id = cart._id;
@@ -49,20 +49,20 @@ export const loginUser = async (req, res) => {
         const { email, password } = req.body;
 
         const user = await getUserByEmailService(email);
-        if (!user) return res.status(400).json({
-            success: false,
-            message: "Email incorrecto",
-        })
+        if (!user) {
+            return res.status(400).json({
+                success: false,
+                message: "Email incorrecto",
+            });
+        }
 
         const isValidPassword = await bcrypt.compare(password, user.password);
         if (!isValidPassword) {
             return res.status(400).json({
                 success: false,
-                message: "Password incorrecta",
+                message: "Contraseña incorrecta",
             });
         }
-
-
 
         res.status(200).json({
             success: true,
@@ -72,8 +72,8 @@ export const loginUser = async (req, res) => {
                 userName: user.userName,
                 email: user.email,
                 rol: user.rol,
-                cart_id: user.cart_id || null, // Evita errores si `cart_id` es undefined
-            }
+                cart_id: user.cart_id || null,
+            },
         });
 
     } catch (error) {
@@ -81,7 +81,7 @@ export const loginUser = async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Error en el servidor. Por favor, inténtelo de nuevo más tarde.",
-            error: err.message,
+            error: error.message,
         });
     }
 }
