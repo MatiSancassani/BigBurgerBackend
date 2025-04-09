@@ -89,14 +89,10 @@ export const updateProductInCart = async (req, res) => {
 
 export const deleteProductInCart = async (req, res) => {
     try {
-        const { cid, pid } = req.params;
+        const { cid, productInCartId } = req.params;
 
-        const product = await getProductByIdService(pid);
-        // if(!(user.cart_id.toString() === cid)) return res.status(400).send( {msg: 'Cart no valido'});
-        if (!product) return res.status(400).send({ msg: "Product no existe" });
-
-        // const cart = await deleteProductInCartService(cid,pid);
-        const cart = await deleteProductInCartService(cid, pid);
+        const cart = await deleteProductInCartService(cid, productInCartId);
+        if (!cart) return res.status(404).send({ msg: "Carrito no encontrado" });
 
         res.status(200).send({ payload: { cart } });
     } catch (err) {

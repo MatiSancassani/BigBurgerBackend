@@ -10,6 +10,7 @@ const cartsSchema = new mongoose.Schema(
         products: [
             {
                 _id: false,
+                productInCartId: { type: String, default: uuidv4 },
                 id: {
                     type: SchemaTypes.ObjectId,
                     ref: "products",

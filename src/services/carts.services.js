@@ -1,5 +1,7 @@
 import cartModel from "../dao/mongo/models/cart.model.js";
 import additionalModel from "../dao/mongo/models/additional.model.js";
+import mongoose from "mongoose";
+import { v4 as uuidv4 } from "uuid";
 
 export const createCartService = async () => await cartModel.create({});
 
@@ -23,40 +25,15 @@ export const getCartByIdService = async (cid) => {
 
 export const addProductInCartService = async (cid, pid, additionals = []) => {
     const cart = await cartModel.findById(cid);
+    if (!cart) return null;
 
-    if (!cart) {
-        return null;
-    }
-    let productInCart = cart.products.find((p) => p.id.toString() === pid);
+    const newProduct = {
+        id: pid,
+        quantity: 1,
+        additionals: []
+    };
 
-    if (!productInCart) {
-        productInCart = {
-            id: pid,
-            quantity: 1,
-            additionals: [] // 🔥 Se inicializa vacío desde el inicio
-        };
-
-        if (additionals.length > 0) {
-            for (const additional of additionals) {
-                const additionalExists = await additionalModel.findById(additional.id);
-                if (!additionalExists) {
-                    console.log(`El adicional con ID ${additional.id} no existe.`);
-                    continue;
-                }
-
-                productInCart.additionals.push({
-                    id: additionalExists._id,
-                    name: additionalExists.name,
-                    price: additionalExists.price,
-                    quantity: additional.quantity ?? 1
-                });
-            }
-        }
-
-        cart.products.push(productInCart);
-    } else {
-        productInCart.quantity++;
-
+    if (additionals.length > 0) {
         for (const additional of additionals) {
             const additionalExists = await additionalModel.findById(additional.id);
             if (!additionalExists) {
@@ -64,20 +41,16 @@ export const addProductInCartService = async (cid, pid, additionals = []) => {
                 continue;
             }
 
-            const additionalInProduct = productInCart.additionals.find((a) => a.id.toString() === additional.id);
-            if (additionalInProduct) {
-                additionalInProduct.quantity += additional.quantity ?? 1;
-            } else {
-                productInCart.additionals.push({
-                    id: additionalExists._id,
-                    name: additionalExists.name,
-                    price: additionalExists.price,
-                    quantity: additional.quantity ?? 1
-                });
-            }
+            newProduct.additionals.push({
+                id: additionalExists._id,
+                name: additionalExists.name,
+                price: additionalExists.price,
+                quantity: additional.quantity ?? 1
+            });
         }
     }
 
+    cart.products.push(newProduct);
     await cart.save();
     return cart;
 };
@@ -89,8 +62,13 @@ export const updateProductInCartService = async (cid, pid, quantity) =>
         { new: true }
     );
 
-export const deleteProductInCartService = async (cid, pid) =>
-    await cartModel.findByIdAndUpdate(cid, { $pull: { products: { id: pid } } }, { new: true });
+export const deleteProductInCartService = async (cid, productInCartId) => {
+    return await cartModel.findByIdAndUpdate(
+        cid,
+        { $pull: { products: { productInCartId } } },
+        { new: true }
+    );
+};
 
 export const deleteAllProductsService = async (cid) =>
     await cartModel.findByIdAndUpdate(cid, { $set: { products: [] } }, { new: true });
