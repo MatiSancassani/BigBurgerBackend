@@ -21,7 +21,7 @@ router.get(
 
             res
                 .cookie("token", token, { httpOnly: true, secure: true, sameSite: "none" })
-                .redirect(`https://big-burger-omega.vercel.app/`);
+                .redirect(`https://big-burger-front.vercel.app//`);
         } catch (error) {
             console.error("Error en /google/callback:", error);
             res.status(500).send("Error en el servidor");
@@ -40,7 +40,7 @@ router.get(
 
             res
                 .cookie("token", token, { httpOnly: true, secure: true, sameSite: "none" })
-                .redirect(`https://big-burger-omega.vercel.app/`);
+                .redirect(`https://big-burger-front.vercel.app//`);
         } catch (error) {
             console.error("Error en /facebook/callback:", error);
             res.status(500).send("Error en el servidor");
